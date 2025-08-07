@@ -14,6 +14,7 @@ export default function RootLayout() {
     <Provider store={store}>
       <PersistGate loading={<LoadingScreen />} persistor={persistor}>
         <Stack screenOptions={{ headerShown: false }}>
+          <Stack.Screen name="onboarding" />
           <Stack.Screen name="(tabs)" />
           <Stack.Screen name="+not-found" />
         </Stack>
