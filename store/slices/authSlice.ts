@@ -1,6 +1,7 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import { AuthService } from '@/services/AuthService';
-import { WalletService } from '@/services/WalletService';
+import { AuthService } from '../../services/AuthService';
+import { WalletService } from '../../services/WalletService';
+import { handleAsyncError } from '../utils/errorUtils';
 
 interface User {
   id: string;
@@ -19,6 +20,7 @@ interface User {
 
 interface AuthState {
   user: User | null;
+  token: string | null;
   isAuthenticated: boolean;
   loading: boolean;
   error: string | null;
@@ -27,6 +29,7 @@ interface AuthState {
 
 const initialState: AuthState = {
   user: null,
+  token: null,
   isAuthenticated: false,
   loading: false,
   error: null,
@@ -41,9 +44,13 @@ export const connectWallet = createAsyncThunk(
       const user = await AuthService.authenticateWithWallet(walletAddress);
       return { user, walletAddress };
     } catch (error) {
-      return rejectWithValue(error.message);
+      return handleAsyncError(
+        error,
+        rejectWithValue,
+        'Failed to connect wallet',
+      );
     }
-  }
+  },
 );
 
 export const enableBiometrics = createAsyncThunk(
@@ -53,9 +60,13 @@ export const enableBiometrics = createAsyncThunk(
       await AuthService.enableBiometricAuth();
       return true;
     } catch (error) {
-      return rejectWithValue(error.message);
+      return handleAsyncError(
+        error,
+        rejectWithValue,
+        'Failed to enable biometrics',
+      );
     }
-  }
+  },
 );
 
 export const authenticateWithBiometrics = createAsyncThunk(
@@ -65,9 +76,13 @@ export const authenticateWithBiometrics = createAsyncThunk(
       const user = await AuthService.authenticateWithBiometrics();
       return user;
     } catch (error) {
-      return rejectWithValue(error.message);
+      return handleAsyncError(
+        error,
+        rejectWithValue,
+        'Failed to authenticate with biometrics',
+      );
     }
-  }
+  },
 );
 
 export const updateProfile = createAsyncThunk(
@@ -77,9 +92,13 @@ export const updateProfile = createAsyncThunk(
       const updatedUser = await AuthService.updateProfile(profileData);
       return updatedUser;
     } catch (error) {
-      return rejectWithValue(error.message);
+      return handleAsyncError(
+        error,
+        rejectWithValue,
+        'Failed to update profile',
+      );
     }
-  }
+  },
 );
 
 const authSlice = createSlice({
@@ -88,6 +107,7 @@ const authSlice = createSlice({
   reducers: {
     logout: (state) => {
       state.user = null;
+      state.token = null;
       state.isAuthenticated = false;
       state.biometricEnabled = false;
       state.error = null;
@@ -107,6 +127,8 @@ const authSlice = createSlice({
         state.loading = false;
         state.user = action.payload.user;
         state.isAuthenticated = true;
+        // Set token if available in response
+        state.token = action.payload.user.id; // or however your token is structured
       })
       .addCase(connectWallet.rejected, (state, action) => {
         state.loading = false;
@@ -120,6 +142,7 @@ const authSlice = createSlice({
       .addCase(authenticateWithBiometrics.fulfilled, (state, action) => {
         state.user = action.payload;
         state.isAuthenticated = true;
+        state.token = action.payload.id; // Set token from user data
       })
       // Update Profile
       .addCase(updateProfile.fulfilled, (state, action) => {

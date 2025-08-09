@@ -8,6 +8,7 @@ module.exports = function (api) {
           unstable_transformImportMeta: true,
         },
       ],
+      'nativewind/babel',
     ],
   };
 };

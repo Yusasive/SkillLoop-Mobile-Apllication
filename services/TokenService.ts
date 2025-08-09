@@ -1,10 +1,16 @@
 import { ethers } from 'ethers';
 import { WalletService } from './WalletService';
 import { ApiService } from './ApiService';
+import Environment from './EnvironmentService';
 
 export class TokenService {
-  private static readonly SKL_CONTRACT_ADDRESS = process.env.EXPO_PUBLIC_SKL_CONTRACT_ADDRESS || '';
-  private static readonly ESCROW_CONTRACT_ADDRESS = process.env.EXPO_PUBLIC_ESCROW_CONTRACT_ADDRESS || '';
+  private static get SKL_CONTRACT_ADDRESS() {
+    return Environment.get('SKL_CONTRACT_ADDRESS');
+  }
+
+  private static get ESCROW_CONTRACT_ADDRESS() {
+    return Environment.get('ESCROW_CONTRACT_ADDRESS');
+  }
 
   static async getBalance() {
     try {
@@ -13,12 +19,12 @@ export class TokenService {
 
       // Get ETH balance
       const ethBalance = await provider.getBalance(address);
-      
+
       // Get SKL token balance
       const sklContract = new ethers.Contract(
         this.SKL_CONTRACT_ADDRESS,
         ['function balanceOf(address) view returns (uint256)'],
-        provider
+        provider,
       );
       const sklBalance = await sklContract.balanceOf(address);
 
@@ -35,30 +41,42 @@ export class TokenService {
     try {
       const provider = await WalletService.getProvider();
       const signer = provider.getSigner();
-      
+
       const sklContract = new ethers.Contract(
         this.SKL_CONTRACT_ADDRESS,
         [
           'function transfer(address to, uint256 amount) returns (bool)',
-          'function decimals() view returns (uint8)'
+          'function decimals() view returns (uint8)',
         ],
-        signer
+        signer,
       );
 
       const decimals = await sklContract.decimals();
       const transferAmount = ethers.utils.parseUnits(amount, decimals);
-      
+
       const tx = await sklContract.transfer(to, transferAmount);
-      
+
       // Create transaction record
-      const transaction = {
+      type TransactionStatus = 'pending' | 'confirmed';
+
+      const transaction: {
+        id: string;
+        type: 'sent';
+        amount: string;
+        token: string;
+        from: string;
+        to: string;
+        status: TransactionStatus;
+        timestamp: string;
+        txHash: string;
+      } = {
         id: tx.hash,
-        type: 'sent' as const,
+        type: 'sent',
         amount,
         token: 'SKL',
         from: WalletService.getConnectedAddress(),
         to,
-        status: 'pending' as const,
+        status: 'pending',
         timestamp: new Date().toISOString(),
         txHash: tx.hash,
       };
@@ -77,40 +95,58 @@ export class TokenService {
     try {
       const provider = await WalletService.getProvider();
       const signer = provider.getSigner();
-      
+
       const escrowContract = new ethers.Contract(
         this.ESCROW_CONTRACT_ADDRESS,
         ['function lockTokens(string sessionId, uint256 amount)'],
-        signer
+        signer,
       );
 
       const sklContract = new ethers.Contract(
         this.SKL_CONTRACT_ADDRESS,
         [
           'function approve(address spender, uint256 amount) returns (bool)',
-          'function decimals() view returns (uint8)'
+          'function decimals() view returns (uint8)',
         ],
-        signer
+        signer,
       );
 
       const decimals = await sklContract.decimals();
       const lockAmount = ethers.utils.parseUnits(amount, decimals);
 
       // First approve the escrow contract
-      const approveTx = await sklContract.approve(this.ESCROW_CONTRACT_ADDRESS, lockAmount);
+      const approveTx = await sklContract.approve(
+        this.ESCROW_CONTRACT_ADDRESS,
+        lockAmount,
+      );
       await approveTx.wait();
 
       // Then lock the tokens
       const lockTx = await escrowContract.lockTokens(sessionId, lockAmount);
-      
-      const transaction = {
+
+      type TransactionStatus = 'pending' | 'confirmed';
+
+      interface EscrowTransaction {
+        id: string;
+        type: 'escrow_lock';
+        amount: string;
+        token: string;
+        from: string;
+        to: string;
+        status: TransactionStatus;
+        timestamp: string;
+        txHash: string;
+        sessionId: string;
+      }
+
+      const transaction: EscrowTransaction = {
         id: lockTx.hash,
-        type: 'escrow_lock' as const,
+        type: 'escrow_lock',
         amount,
         token: 'SKL',
         from: WalletService.getConnectedAddress(),
         to: this.ESCROW_CONTRACT_ADDRESS,
-        status: 'pending' as const,
+        status: 'pending',
         timestamp: new Date().toISOString(),
         txHash: lockTx.hash,
         sessionId,
@@ -129,30 +165,45 @@ export class TokenService {
     try {
       const provider = await WalletService.getProvider();
       const signer = provider.getSigner();
-      
+
       const escrowContract = new ethers.Contract(
         this.ESCROW_CONTRACT_ADDRESS,
         ['function releaseTokens(string sessionId)'],
-        signer
+        signer,
       );
 
       const releaseTx = await escrowContract.releaseTokens(sessionId);
-      
-      const transaction = {
+
+      type TransactionStatus = 'pending' | 'confirmed';
+
+      interface EscrowReleaseTransaction {
+        id: string;
+        type: 'escrow_release';
+        amount: string;
+        token: string;
+        from: string;
+        to: string;
+        status: TransactionStatus;
+        timestamp: string;
+        txHash: string;
+        sessionId: string;
+      }
+
+      const transaction: EscrowReleaseTransaction = {
         id: releaseTx.hash,
-        type: 'escrow_release' as const,
-        amount: '0', // Amount will be updated from contract event
+        type: 'escrow_release',
+        amount: '0',
         token: 'SKL',
         from: this.ESCROW_CONTRACT_ADDRESS,
         to: WalletService.getConnectedAddress(),
-        status: 'pending' as const,
+        status: 'pending',
         timestamp: new Date().toISOString(),
         txHash: releaseTx.hash,
         sessionId,
       };
 
       await releaseTx.wait();
-      transaction.status = 'confirmed';
+      transaction.status = 'confirmed'; 
 
       return transaction;
     } catch (error) {

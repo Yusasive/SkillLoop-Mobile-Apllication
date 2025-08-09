@@ -1,11 +1,21 @@
-import { WalletConnectModal } from '@walletconnect/modal-react-native';
+import {
+  WalletConnectModal,
+  WalletConnectModalOptions,
+} from '@walletconnect/modal-react-native';
 import { ethers } from 'ethers';
+import Environment from './EnvironmentService';
+
+// Define WalletConnect event payloads
+interface ConnectEvent {
+  accounts: string[];
+  chainId: number;
+}
 
 export class WalletService {
   private static instance: WalletService;
   private walletConnectModal: WalletConnectModal | null = null;
   private provider: ethers.providers.Web3Provider | null = null;
-  private connectedAddress: string = '';
+  private connectedAddress = '';
 
   private constructor() {
     this.initializeWalletConnect();
@@ -19,55 +29,53 @@ export class WalletService {
   }
 
   private initializeWalletConnect() {
-    const projectId = process.env.EXPO_PUBLIC_WALLETCONNECT_PROJECT_ID || '';
-    
-    this.walletConnectModal = new WalletConnectModal({
+    const projectId = Environment.get('WALLETCONNECT_PROJECT_ID');
+
+    const options: WalletConnectModalOptions = {
       projectId,
       metadata: {
         name: 'SkillLoop',
         description: 'Decentralized Peer-to-Peer Learning Platform',
-        url: 'https://skillloop.app',
-        icons: ['https://skillloop.app/logo.png'],
+        url: Environment.get('APP_URL') || '',
+        icons: [`${Environment.get('APP_URL')}/logo.png`],
       },
-    });
+    };
+
+    this.walletConnectModal = new WalletConnectModal(options);
   }
 
   static async connect(): Promise<string> {
     const instance = WalletService.getInstance();
-    
-    try {
-      if (!instance.walletConnectModal) {
-        throw new Error('WalletConnect not initialized');
-      }
 
-      await instance.walletConnectModal.open();
-      
-      // Wait for connection
-      return new Promise((resolve, reject) => {
-        const timeout = setTimeout(() => {
-          reject(new Error('Connection timeout'));
-        }, 60000);
-
-        instance.walletConnectModal!.on('connect', (session) => {
-          clearTimeout(timeout);
-          const address = session.accounts[0];
-          instance.connectedAddress = address;
-          resolve(address);
-        });
-
-        instance.walletConnectModal!.on('reject', () => {
-          clearTimeout(timeout);
-          reject(new Error('Connection rejected'));
-        });
-      });
-    } catch (error) {
-      throw new Error('Failed to connect wallet');
+    if (!instance.walletConnectModal) {
+      throw new Error('WalletConnect not initialized');
     }
+
+    await instance.walletConnectModal.open();
+
+    return new Promise((resolve, reject) => {
+      const timeout = setTimeout(
+        () => reject(new Error('Connection timeout')),
+        60000,
+      );
+
+      instance.walletConnectModal!.on('connect', (session: ConnectEvent) => {
+        clearTimeout(timeout);
+        const address = session.accounts[0];
+        instance.connectedAddress = address;
+        resolve(address);
+      });
+
+      instance.walletConnectModal!.on('reject', () => {
+        clearTimeout(timeout);
+        reject(new Error('Connection rejected'));
+      });
+    });
   }
 
   static async disconnect(): Promise<void> {
     const instance = WalletService.getInstance();
-    
+
     try {
       if (instance.walletConnectModal) {
         await instance.walletConnectModal.disconnect();
@@ -84,25 +92,24 @@ export class WalletService {
   }
 
   static getConnectedWallets(): string[] {
-    // Return list of connected wallet addresses
-    return WalletService.getInstance().connectedAddress ? 
-      [WalletService.getInstance().connectedAddress] : [];
+    return WalletService.getInstance().connectedAddress
+      ? [WalletService.getInstance().connectedAddress]
+      : [];
   }
 
   static async getProvider(): Promise<ethers.providers.Web3Provider> {
     const instance = WalletService.getInstance();
-    
+
     if (!instance.provider && instance.walletConnectModal) {
-      // Create provider from WalletConnect
       instance.provider = new ethers.providers.Web3Provider(
-        instance.walletConnectModal as any
+        instance.walletConnectModal as unknown as ethers.providers.ExternalProvider,
       );
     }
-    
+
     if (!instance.provider) {
       throw new Error('No wallet provider available');
     }
-    
+
     return instance.provider;
   }
 
@@ -111,7 +118,7 @@ export class WalletService {
       const provider = await WalletService.getProvider();
       const signer = provider.getSigner();
       return await signer.signMessage(message);
-    } catch (error) {
+    } catch {
       throw new Error('Failed to sign message');
     }
   }
