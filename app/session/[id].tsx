@@ -9,18 +9,7 @@ import {
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useLocalSearchParams, router } from 'expo-router';
-import {
-  Video,
-  VideoOff,
-  Mic,
-  MicOff,
-  Phone,
-  MessageCircle,
-  Share,
-  CheckSquare,
-  Square,
-  Camera,
-} from 'lucide-react-native';
+import { Video, VideoOff, Mic, MicOff, Phone, MessageCircle, Share, SquareCheck as CheckSquare, Square, Camera } from 'lucide-react-native';
 import VideoCallView from '../../components/session/VideoCallView';
 import SessionChat from '../../components/session/SessionChat';
 import AccessibilityService from '../../services/AccessibilityService';

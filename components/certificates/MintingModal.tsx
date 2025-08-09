@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, useColorScheme, Modal, ActivityIndicator } from 'react-native';
-import { X, Award, CheckCircle, AlertCircle } from 'lucide-react-native';
+import { X, Award, CircleCheck as CheckCircle, CircleAlert as AlertCircle } from 'lucide-react-native';
 import { useDispatch } from 'react-redux';
 import { mintCertificate } from '@/store/slices/certificatesSlice';
 import { Certificate } from '@/store/types';

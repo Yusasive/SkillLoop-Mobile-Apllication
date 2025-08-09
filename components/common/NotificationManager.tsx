@@ -6,14 +6,7 @@ import {
   StyleSheet,
   useColorScheme,
 } from 'react-native';
-import {
-  Bell,
-  X,
-  Calendar,
-  MessageCircle,
-  Award,
-  AlertCircle,
-} from 'lucide-react-native';
+import { Bell, X, Calendar, MessageCircle, Award, CircleAlert as AlertCircle } from 'lucide-react-native';
 import { PushNotificationService } from '../../services/PushNotificationService';
 import AccessibilityService from '../../services/AccessibilityService';
 import { AnalyticsService } from '../../services/AnalyticsService';
