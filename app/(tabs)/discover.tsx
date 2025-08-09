@@ -39,7 +39,7 @@ export default function DiscoverScreen() {
     setRefreshing(true);
 
     // Provide haptic feedback
-    await AccessibilityService.provideHapticFeedback('light');
+    AccessibilityService.provideHapticFeedback('light');
 
     // Announce refresh for accessibility
     AccessibilityService.announceToScreenReader('Refreshing tutors list');

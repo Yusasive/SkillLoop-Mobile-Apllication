@@ -2,16 +2,7 @@ import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, useColorScheme, FlatList } from 'react-native';
 import { Clock, Video } from 'lucide-react-native';
 import { EmptyState } from '@/components/common/EmptyState';
-
-interface Session {
-  id: string;
-  tutorName: string;
-  tutorAvatar?: string;
-  skill: string;
-  scheduledTime: string;
-  duration: number;
-  status: 'upcoming' | 'in_progress' | 'completed';
-}
+import { Session } from '@/store/types';
 
 interface UpcomingSessionsProps {
   sessions: Session[];

@@ -1,34 +1,6 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { ApiService } from '@/services/ApiService';
-
-interface Session {
-  id: string;
-  tutorId: string;
-  tutorName: string;
-  tutorAvatar?: string;
-  studentId: string;
-  studentName: string;
-  skill: string;
-  scheduledTime: string;
-  duration: number;
-  status: 'scheduled' | 'confirmed' | 'in_progress' | 'completed' | 'cancelled';
-  hourlyRate: string;
-  totalAmount: string;
-  escrowAmount?: string;
-  notes?: string;
-  progress?: SessionProgress[];
-  rating?: number;
-  review?: string;
-  createdAt: string;
-  updatedAt: string;
-}
-
-interface SessionProgress {
-  id: string;
-  milestone: string;
-  completed: boolean;
-  completedAt?: string;
-}
+import { Session, SessionProgress } from '../types';
 
 interface BookingData {
   tutorId: string;
@@ -58,7 +30,7 @@ export const fetchSessions = createAsyncThunk(
     try {
       const data = await ApiService.get('/sessions');
       return data;
-    } catch (error) {
+    } catch (error: any) {
       return rejectWithValue(error.message);
     }
   }
@@ -70,7 +42,7 @@ export const bookSession = createAsyncThunk(
     try {
       const session = await ApiService.post('/sessions', bookingData);
       return session;
-    } catch (error) {
+    } catch (error: any) {
       return rejectWithValue(error.message);
     }
   }
@@ -82,7 +54,7 @@ export const cancelSession = createAsyncThunk(
     try {
       await ApiService.patch(`/sessions/${sessionId}/cancel`);
       return sessionId;
-    } catch (error) {
+    } catch (error: any) {
       return rejectWithValue(error.message);
     }
   }
@@ -94,7 +66,7 @@ export const startSession = createAsyncThunk(
     try {
       const session = await ApiService.patch(`/sessions/${sessionId}/start`);
       return session;
-    } catch (error) {
+    } catch (error: any) {
       return rejectWithValue(error.message);
     }
   }
@@ -106,7 +78,7 @@ export const completeSession = createAsyncThunk(
     try {
       const session = await ApiService.patch(`/sessions/${sessionId}/complete`, { progress });
       return session;
-    } catch (error) {
+    } catch (error: any) {
       return rejectWithValue(error.message);
     }
   }
@@ -118,7 +90,7 @@ export const rateSession = createAsyncThunk(
     try {
       const session = await ApiService.patch(`/sessions/${sessionId}/rate`, { rating, review });
       return session;
-    } catch (error) {
+    } catch (error: any) {
       return rejectWithValue(error.message);
     }
   }

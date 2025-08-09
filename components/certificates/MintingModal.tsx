@@ -3,15 +3,7 @@ import { View, Text, TouchableOpacity, StyleSheet, useColorScheme, Modal, Activi
 import { X, Award, CheckCircle, AlertCircle } from 'lucide-react-native';
 import { useDispatch } from 'react-redux';
 import { mintCertificate } from '@/store/slices/certificatesSlice';
-
-interface Certificate {
-  id: string;
-  metadata: {
-    title: string;
-    description: string;
-  };
-  tutorName: string;
-}
+import { Certificate } from '@/store/types';
 
 interface MintingModalProps {
   visible: boolean;
@@ -40,7 +32,7 @@ export const MintingModal: React.FC<MintingModalProps> = ({
         onClose();
         setMintingState('idle');
       }, 2000);
-    } catch (error) {
+    } catch (error: any) {
       setMintingState('error');
       setErrorMessage(error.message || 'Failed to mint certificate');
     }

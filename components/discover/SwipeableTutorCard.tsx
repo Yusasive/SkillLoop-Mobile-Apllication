@@ -5,15 +5,10 @@ import {
   StyleSheet,
   useColorScheme,
   Dimensions,
-  PanGestureHandler,
-  State,
-  Animated,
   TouchableOpacity,
 } from 'react-native';
-import {
-  PanGestureHandlerGestureEvent,
-  PanGestureHandlerStateChangeEvent,
-} from 'react-native-gesture-handler';
+import { PanGestureHandler, State } from 'react-native-gesture-handler';
+import Animated from 'react-native-reanimated';
 import {
   Star,
   Clock,
@@ -24,27 +19,14 @@ import {
   Calendar,
 } from 'lucide-react-native';
 import { HapticService } from '@/services/HapticService';
+import { Tutor } from '@/store/types';
 
 const { width: screenWidth } = Dimensions.get('window');
 const SWIPE_THRESHOLD = screenWidth * 0.3;
 const CARD_WIDTH = screenWidth - 32;
 
 export interface SwipeableTutorCardProps {
-  tutor: {
-    id: string;
-    name: string;
-    avatar?: string;
-    bio: string;
-    skills: string[];
-    rating: number;
-    reviewCount: number;
-    hourlyRate: string;
-    isOnline: boolean;
-    responseTime: string;
-    completedSessions: number;
-    languages: string[];
-    verified: boolean;
-  };
+  tutor: Tutor;
   onSwipeLeft?: (tutorId: string) => void; // Reject/Pass
   onSwipeRight?: (tutorId: string) => void; // Like/Interested
   onSwipeUp?: (tutorId: string) => void; // Super like
@@ -83,7 +65,7 @@ export const SwipeableTutorCard: React.FC<SwipeableTutorCardProps> = ({
     { useNativeDriver: true },
   );
 
-  const onHandlerStateChange = (event: PanGestureHandlerStateChangeEvent) => {
+  const onHandlerStateChange = (event: any) => {
     if (disabled) return;
 
     const { state, translationX: x, translationY: y } = event.nativeEvent;

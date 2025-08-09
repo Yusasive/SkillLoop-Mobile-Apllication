@@ -1,14 +1,7 @@
 import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, useColorScheme } from 'react-native';
 import { Wallet, TrendingUp, Send, Plus } from 'lucide-react-native';
-
-interface WalletData {
-  address: string;
-  sklBalance: string;
-  ethBalance: string;
-  transactions: any[];
-  connectedWallets: string[];
-}
+import { WalletData } from '@/store/types';
 
 interface WalletSectionProps {
   walletData: WalletData | null;

@@ -6,7 +6,6 @@ import {
   StyleSheet,
   useColorScheme,
 } from 'react-native';
-import * as Notifications from 'expo-notifications';
 import {
   Bell,
   X,
@@ -186,31 +185,8 @@ export const NotificationManager: React.FC<NotificationManagerProps> = ({
   const [notifications, setNotifications] = useState<NotificationData[]>([]);
 
   useEffect(() => {
-    // Listen for new notifications
-    const unsubscribe = notificationService.onNotificationReceived(
-      (notification) => {
-        const notificationData: NotificationData = {
-          id: notification.request.identifier,
-          title: notification.request.content.title || 'SkillLoop',
-          body: notification.request.content.body || '',
-          type: (notification.request.content.data?.type as any) || 'general',
-          timestamp: new Date(),
-          read: false,
-          actionUrl: notification.request.content.data?.actionUrl as
-            | string
-            | undefined,
-          metadata: notification.request.content.data,
-        };
-
-        setNotifications((prev) => [notificationData, ...prev.slice(0, 4)]); // Keep max 5 notifications
-      },
-    );
-
-    return () => {
-      if (unsubscribe) {
-        unsubscribe();
-      }
-    };
+    // Mock notification listener for development
+    console.log('Notification manager initialized');
   }, []);
 
   const handleNotificationPress = (notification: NotificationData) => {

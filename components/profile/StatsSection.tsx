@@ -1,21 +1,7 @@
 import React from 'react';
 import { View, Text, StyleSheet, useColorScheme } from 'react-native';
 import { StatCard } from '@/components/common/StatCard';
-
-interface User {
-  id: string;
-  walletAddress: string;
-  email?: string;
-  name: string;
-  avatar?: string;
-  bio?: string;
-  teachingSkills: string[];
-  learningSkills: string[];
-  rating: number;
-  completedSessions: number;
-  joinedDate: string;
-  isVerified: boolean;
-}
+import { User } from '@/store/types';
 
 interface StatsSectionProps {
   user: User | null;

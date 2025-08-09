@@ -46,9 +46,20 @@ export class BiometricService {
     try {
       const enabled = await SecureStore.getItemAsync(this.BIOMETRIC_KEY);
       return enabled === 'true';
-    } catch {
+    } catch (error) {
       return false;
     }
+  }
+
+  static async authenticateForAppAccess(): Promise<boolean> {
+    const isBiometricEnabled = await this.isBiometricEnabled();
+    const isAvailable = await this.isAvailable();
+
+    if (!isBiometricEnabled || !isAvailable) {
+      return true; // Skip biometric if not enabled or available
+    }
+
+    return await this.authenticate('Unlock SkillLoop');
   }
 
   static async storeAuthToken(token: string): Promise<void> {
@@ -58,7 +69,7 @@ export class BiometricService {
   static async getAuthToken(): Promise<string | null> {
     try {
       return await SecureStore.getItemAsync(this.AUTH_TOKEN_KEY);
-    } catch {
+    } catch (error) {
       return null;
     }
   }

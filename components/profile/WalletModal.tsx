@@ -2,14 +2,7 @@ import React, { useState } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, useColorScheme, Modal, ScrollView, TextInput } from 'react-native';
 import { X, Wallet, Send, TrendingUp, Plus, Copy } from 'lucide-react-native';
 import * as Clipboard from 'expo-clipboard';
-
-interface WalletData {
-  address: string;
-  sklBalance: string;
-  ethBalance: string;
-  transactions: any[];
-  connectedWallets: string[];
-}
+import { WalletData } from '@/store/types';
 
 interface WalletModalProps {
   visible: boolean;

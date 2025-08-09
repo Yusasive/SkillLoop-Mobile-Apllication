@@ -1,29 +1,19 @@
 import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, useColorScheme, FlatList, ActivityIndicator } from 'react-native';
 import { Star, Clock, CheckCircle } from 'lucide-react-native';
-
-interface Tutor {
-  id: string;
-  name: string;
-  avatar?: string;
-  bio: string;
-  skills: string[];
-  rating: number;
-  reviewCount: number;
-  hourlyRate: string;
-  isOnline: boolean;
-  responseTime: string;
-  completedSessions: number;
-  languages: string[];
-  verified: boolean;
-}
+import { Tutor } from '@/store/types';
 
 interface TutorGridProps {
   tutors: Tutor[];
   loading: boolean;
+  refreshControl?: React.ReactElement<any>;
 }
 
-export const TutorGrid: React.FC<TutorGridProps> = ({ tutors, loading }) => {
+export const TutorGrid: React.FC<TutorGridProps> = ({ 
+  tutors, 
+  loading, 
+  refreshControl 
+}) => {
   const colorScheme = useColorScheme();
 
   const renderTutor = ({ item }: { item: Tutor }) => (
@@ -90,6 +80,7 @@ export const TutorGrid: React.FC<TutorGridProps> = ({ tutors, loading }) => {
       contentContainerStyle={styles.container}
       columnWrapperStyle={styles.row}
       showsVerticalScrollIndicator={false}
+      refreshControl={refreshControl}
     />
   );
 };

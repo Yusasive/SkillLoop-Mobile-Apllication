@@ -2,21 +2,7 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { AuthService } from '../../services/AuthService';
 import { WalletService } from '../../services/WalletService';
 import { handleAsyncError } from '../utils/errorUtils';
-
-interface User {
-  id: string;
-  walletAddress: string;
-  email?: string;
-  name: string;
-  avatar?: string;
-  bio?: string;
-  teachingSkills: string[];
-  learningSkills: string[];
-  rating: number;
-  completedSessions: number;
-  joinedDate: string;
-  isVerified: boolean;
-}
+import { User } from '../types';
 
 interface AuthState {
   user: User | null;

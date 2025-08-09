@@ -2,15 +2,7 @@ import React, { useState } from 'react';
 import { View, Text, StyleSheet, useColorScheme } from 'react-native';
 import { Calendar } from 'react-native-calendars';
 import { Clock } from 'lucide-react-native';
-
-interface Session {
-  id: string;
-  tutorName: string;
-  skill: string;
-  scheduledTime: string;
-  duration: number;
-  status: 'scheduled' | 'confirmed' | 'in_progress' | 'completed' | 'cancelled';
-}
+import { Session } from '@/store/types';
 
 interface SessionCalendarProps {
   sessions: Session[];
@@ -211,3 +203,19 @@ const createStyles = (isDark: boolean) =>
       fontWeight: '600',
     },
   });
+
+const statusColors = {
+  scheduled: '#f59e0b',
+  confirmed: '#10b981',
+  in_progress: '#3b82f6',
+  completed: '#6b7280',
+  cancelled: '#ef4444',
+};
+
+const statusLabels = {
+  scheduled: 'Scheduled',
+  confirmed: 'Confirmed',
+  in_progress: 'In Progress',
+  completed: 'Completed',
+  cancelled: 'Cancelled',
+};

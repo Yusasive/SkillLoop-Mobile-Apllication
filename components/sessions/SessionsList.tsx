@@ -16,27 +16,7 @@ import {
   Calendar,
   User,
 } from 'lucide-react-native';
-
-interface Session {
-  id: string;
-  tutorId: string;
-  tutorName: string;
-  tutorAvatar?: string;
-  studentId: string;
-  studentName: string;
-  skill: string;
-  scheduledTime: string;
-  duration: number;
-  status: 'scheduled' | 'confirmed' | 'in_progress' | 'completed' | 'cancelled';
-  hourlyRate: string;
-  totalAmount: string;
-  escrowAmount?: string;
-  notes?: string;
-  rating?: number;
-  review?: string;
-  createdAt: string;
-  updatedAt: string;
-}
+import { Session } from '@/store/types';
 
 interface SessionsListProps {
   sessions: Session[];

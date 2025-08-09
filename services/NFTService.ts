@@ -46,7 +46,7 @@ export class NFTService {
         txHash: mintTx.hash,
         mintedAt: new Date().toISOString(),
       };
-    } catch (error) {
+    } catch (error: any) {
       throw new Error('Failed to mint certificate NFT');
     }
   }
@@ -65,7 +65,7 @@ export class NFTService {
         tokenURI.replace('ipfs://', 'https://ipfs.io/ipfs/'),
       );
       return await response.json();
-    } catch (error) {
+    } catch (error: any) {
       throw new Error('Failed to fetch certificate metadata');
     }
   }
@@ -92,7 +92,7 @@ export class NFTService {
 
       await transferTx.wait();
       return transferTx.hash;
-    } catch (error) {
+    } catch (error: any) {
       throw new Error('Failed to transfer certificate');
     }
   }

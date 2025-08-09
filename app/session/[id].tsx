@@ -78,7 +78,7 @@ export default function SessionScreen() {
       setSessionStarted(true);
 
       // Provide haptic feedback
-      await AccessibilityService.provideHapticFeedback('success');
+      AccessibilityService.provideHapticFeedback('success');
 
       // Announce video call start
       AccessibilityService.announceToScreenReader('Video call started');

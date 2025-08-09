@@ -1,19 +1,23 @@
 import {
   WalletConnectModal,
-  WalletConnectModalOptions,
 } from '@walletconnect/modal-react-native';
 import { ethers } from 'ethers';
 import Environment from './EnvironmentService';
 
-// Define WalletConnect event payloads
-interface ConnectEvent {
-  accounts: string[];
-  chainId: number;
+// Define proper WalletConnect types
+interface WalletConnectModalConfig {
+  projectId: string;
+  metadata: {
+    name: string;
+    description: string;
+    url: string;
+    icons: string[];
+  };
 }
 
 export class WalletService {
   private static instance: WalletService;
-  private walletConnectModal: WalletConnectModal | null = null;
+  private walletConnectModal: any = null;
   private provider: ethers.providers.Web3Provider | null = null;
   private connectedAddress = '';
 
@@ -31,7 +35,7 @@ export class WalletService {
   private initializeWalletConnect() {
     const projectId = Environment.get('WALLETCONNECT_PROJECT_ID');
 
-    const options: WalletConnectModalOptions = {
+    const options: WalletConnectModalConfig = {
       projectId,
       metadata: {
         name: 'SkillLoop',
@@ -65,9 +69,9 @@ export class WalletService {
         instance.connectedAddress = address;
         resolve(address);
       });
-
+    instance.walletConnectModal!.on('connect', (session: any) => {
       instance.walletConnectModal!.on('reject', () => {
-        clearTimeout(timeout);
+      const address = session.accounts?.[0] || '';
         reject(new Error('Connection rejected'));
       });
     });

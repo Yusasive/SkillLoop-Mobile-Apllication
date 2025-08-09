@@ -2,16 +2,7 @@ import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, useColorScheme, ScrollView } from 'react-native';
 import { Star, Clock } from 'lucide-react-native';
 import { EmptyState } from '@/components/common/EmptyState';
-
-interface Tutor {
-  id: string;
-  name: string;
-  avatar?: string;
-  skills: string[];
-  rating: number;
-  hourlyRate: string;
-  isOnline: boolean;
-}
+import { Tutor } from '@/store/types';
 
 interface RecommendedTutorsProps {
   tutors: Tutor[];

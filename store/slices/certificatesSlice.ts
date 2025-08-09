@@ -1,31 +1,7 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { ApiService } from '@/services/ApiService';
 import { NFTService } from '@/services/NFTService';
-
-interface Certificate {
-  id: string;
-  sessionId: string;
-  tutorName: string;
-  skill: string;
-  completedAt: string;
-  progress: number;
-  metadata: {
-    title: string;
-    description: string;
-    image?: string;
-    attributes: Array<{
-      trait_type: string;
-      value: string | number;
-    }>;
-  };
-  nftData?: {
-    tokenId: string;
-    contractAddress: string;
-    txHash: string;
-    mintedAt: string;
-  };
-  isMinted: boolean;
-}
+import { Certificate } from '../types';
 
 interface CertificatesState {
   certificates: Certificate[];
@@ -47,7 +23,7 @@ export const fetchCertificates = createAsyncThunk(
     try {
       const data = await ApiService.get('/certificates');
       return data;
-    } catch (error) {
+    } catch (error: any) {
       return rejectWithValue(error.message);
     }
   }
@@ -70,7 +46,7 @@ export const mintCertificate = createAsyncThunk(
       
       dispatch(removeMintingCertificate(certificateId));
       return updatedCertificate;
-    } catch (error) {
+    } catch (error: any) {
       dispatch(removeMintingCertificate(certificateId));
       return rejectWithValue(error.message);
     }
@@ -83,7 +59,7 @@ export const shareCertificate = createAsyncThunk(
     try {
       const shareData = await ApiService.post(`/certificates/${certificateId}/share`);
       return shareData;
-    } catch (error) {
+    } catch (error: any) {
       return rejectWithValue(error.message);
     }
   }

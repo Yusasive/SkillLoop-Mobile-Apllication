@@ -46,7 +46,7 @@ const AccessibleButton = forwardRef<TouchableOpacity, AccessibleButtonProps>(
       if (loading || disabled) return;
 
       // Provide haptic feedback
-      await AccessibilityService.provideHapticFeedback('light');
+      AccessibilityService.provideHapticFeedback('light');
 
       // Announce action if specified
       if (onPressAnnouncement) {

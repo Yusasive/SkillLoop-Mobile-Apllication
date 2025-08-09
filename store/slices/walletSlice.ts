@@ -1,27 +1,7 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { WalletService } from '@/services/WalletService';
 import { TokenService } from '@/services/TokenService';
-
-interface Transaction {
-  id: string;
-  type: 'sent' | 'received' | 'escrow_lock' | 'escrow_release';
-  amount: string;
-  token: string;
-  from: string;
-  to: string;
-  status: 'pending' | 'confirmed' | 'failed';
-  timestamp: string;
-  txHash?: string;
-  sessionId?: string;
-}
-
-interface WalletData {
-  address: string;
-  sklBalance: string;
-  ethBalance: string;
-  transactions: Transaction[];
-  connectedWallets: string[];
-}
+import { Transaction, WalletData } from '../types';
 
 interface WalletState {
   walletData: WalletData | null;
@@ -55,7 +35,7 @@ export const fetchWalletData = createAsyncThunk(
         transactions,
         connectedWallets: WalletService.getConnectedWallets(),
       };
-    } catch (error) {
+    } catch (error: any) {
       return rejectWithValue(error.message);
     }
   }
@@ -67,7 +47,7 @@ export const sendTokens = createAsyncThunk(
     try {
       const transaction = await TokenService.transfer(to, amount);
       return transaction;
-    } catch (error) {
+    } catch (error: any) {
       return rejectWithValue(error.message);
     }
   }
@@ -79,7 +59,7 @@ export const lockTokensInEscrow = createAsyncThunk(
     try {
       const transaction = await TokenService.lockInEscrow(sessionId, amount);
       return transaction;
-    } catch (error) {
+    } catch (error: any) {
       return rejectWithValue(error.message);
     }
   }
@@ -91,7 +71,7 @@ export const releaseEscrowTokens = createAsyncThunk(
     try {
       const transaction = await TokenService.releaseFromEscrow(sessionId);
       return transaction;
-    } catch (error) {
+    } catch (error: any) {
       return rejectWithValue(error.message);
     }
   }

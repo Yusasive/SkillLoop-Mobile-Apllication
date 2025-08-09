@@ -1,31 +1,7 @@
 import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, useColorScheme, FlatList, ActivityIndicator } from 'react-native';
 import { Award, ExternalLink, Share } from 'lucide-react-native';
-
-interface Certificate {
-  id: string;
-  sessionId: string;
-  tutorName: string;
-  skill: string;
-  completedAt: string;
-  progress: number;
-  metadata: {
-    title: string;
-    description: string;
-    image?: string;
-    attributes: Array<{
-      trait_type: string;
-      value: string | number;
-    }>;
-  };
-  nftData?: {
-    tokenId: string;
-    contractAddress: string;
-    txHash: string;
-    mintedAt: string;
-  };
-  isMinted: boolean;
-}
+import { Certificate } from '@/store/types';
 
 interface CertificatesGridProps {
   certificates: Certificate[];

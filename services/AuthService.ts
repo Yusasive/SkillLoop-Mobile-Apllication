@@ -15,7 +15,7 @@ export class AuthService {
       await AsyncStorage.setItem('auth_token', response.token);
       
       return response.user;
-    } catch (error) {
+    } catch (error: any) {
       throw new Error('Failed to authenticate with wallet');
     }
   }
@@ -42,7 +42,7 @@ export class AuthService {
       } else {
         throw new Error('Biometric authentication failed');
       }
-    } catch (error) {
+    } catch (error: any) {
       throw error;
     }
   }
@@ -73,7 +73,7 @@ export class AuthService {
       }
       
       throw new Error('Biometric authentication failed');
-    } catch (error) {
+    } catch (error: any) {
       throw error;
     }
   }
@@ -82,7 +82,7 @@ export class AuthService {
     try {
       const response = await ApiService.patch('/user/profile', profileData);
       return response.user;
-    } catch (error) {
+    } catch (error: any) {
       throw new Error('Failed to update profile');
     }
   }

@@ -1,5 +1,6 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { ApiService } from '@/services/ApiService';
+import { Session, Tutor } from '../types';
 
 interface Activity {
   id: string;
@@ -8,26 +9,6 @@ interface Activity {
   description: string;
   timestamp: string;
   icon: string;
-}
-
-interface Session {
-  id: string;
-  tutorName: string;
-  tutorAvatar?: string;
-  skill: string;
-  scheduledTime: string;
-  duration: number;
-  status: 'upcoming' | 'in_progress' | 'completed';
-}
-
-interface Tutor {
-  id: string;
-  name: string;
-  avatar?: string;
-  skills: string[];
-  rating: number;
-  hourlyRate: string;
-  isOnline: boolean;
 }
 
 interface Progress {
@@ -64,7 +45,7 @@ export const fetchDashboardData = createAsyncThunk(
     try {
       const data = await ApiService.get('/dashboard');
       return data;
-    } catch (error) {
+    } catch (error: any) {
       return rejectWithValue(error.message);
     }
   }

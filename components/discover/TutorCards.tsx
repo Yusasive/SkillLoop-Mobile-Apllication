@@ -10,24 +10,9 @@ import {
 import { SwipeableTutorCard } from './SwipeableTutorCard';
 import { AnalyticsService } from '../../services/AnalyticsService';
 import AccessibilityService from '../../services/AccessibilityService';
+import { Tutor } from '@/store/types';
 
 const analyticsService = AnalyticsService.getInstance();
-
-interface Tutor {
-  id: string;
-  name: string;
-  avatar?: string;
-  bio: string;
-  skills: string[];
-  rating: number;
-  reviewCount: number;
-  hourlyRate: string;
-  isOnline: boolean;
-  responseTime: string;
-  completedSessions: number;
-  languages: string[];
-  verified: boolean;
-}
 
 interface TutorCardsProps {
   tutors: Tutor[];

@@ -1,21 +1,6 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { ApiService } from '@/services/ApiService';
-
-interface Tutor {
-  id: string;
-  name: string;
-  avatar?: string;
-  bio: string;
-  skills: string[];
-  rating: number;
-  reviewCount: number;
-  hourlyRate: string;
-  isOnline: boolean;
-  responseTime: string;
-  completedSessions: number;
-  languages: string[];
-  verified: boolean;
-}
+import { Tutor } from '../types';
 
 interface Filters {
   category: string;
@@ -68,7 +53,7 @@ export const searchTutors = createAsyncThunk(
       
       const data = await ApiService.get('/tutors/search', searchParams);
       return { tutors: data.tutors, hasMore: data.hasMore, reset: params?.reset };
-    } catch (error) {
+    } catch (error: any) {
       return rejectWithValue(error.message);
     }
   }
@@ -89,7 +74,7 @@ export const loadMoreTutors = createAsyncThunk(
       
       const data = await ApiService.get('/tutors/search', searchParams);
       return { tutors: data.tutors, hasMore: data.hasMore };
-    } catch (error) {
+    } catch (error: any) {
       return rejectWithValue(error.message);
     }
   }

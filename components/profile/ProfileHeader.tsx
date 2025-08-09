@@ -1,21 +1,7 @@
 import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, useColorScheme } from 'react-native';
 import { Edit, Star, Award, Clock } from 'lucide-react-native';
-
-interface User {
-  id: string;
-  walletAddress: string;
-  email?: string;
-  name: string;
-  avatar?: string;
-  bio?: string;
-  teachingSkills: string[];
-  learningSkills: string[];
-  rating: number;
-  completedSessions: number;
-  joinedDate: string;
-  isVerified: boolean;
-}
+import { User } from '@/store/types';
 
 interface ProfileHeaderProps {
   user: User | null;

@@ -122,7 +122,7 @@ export class PushNotificationService {
         canAskAgain: finalStatus !== 'denied',
         status: finalStatus,
       };
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error requesting notification permissions:', error);
       return {
         granted: false,
@@ -135,10 +135,10 @@ export class PushNotificationService {
   private async getExpoPushToken(): Promise<string | null> {
     try {
       const token = await Notifications.getExpoPushTokenAsync({
-        projectId: Environment.get('EXPO_PROJECT_ID'),
+        projectId: Environment.get('WALLETCONNECT_PROJECT_ID'), // Using available env var
       });
       return token.data;
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error getting Expo push token:', error);
       return null;
     }
@@ -151,7 +151,7 @@ export class PushNotificationService {
         platform: Platform.OS,
         deviceId: Device.deviceName,
       });
-    } catch (error) {
+    } catch (error: any) {
       console.error('Failed to register push token with backend:', error);
     }
   }
@@ -372,15 +372,4 @@ export class PushNotificationService {
     return () => Notifications.removeNotificationSubscription(subscription);
   }
 
-  cleanup(): void {
-    if (this.notificationListener) {
-      Notifications.removeNotificationSubscription(this.notificationListener);
-      this.notificationListener = null;
-    }
-
-    if (this.responseListener) {
-      Notifications.removeNotificationSubscription(this.responseListener);
-      this.responseListener = null;
-    }
-  }
 }

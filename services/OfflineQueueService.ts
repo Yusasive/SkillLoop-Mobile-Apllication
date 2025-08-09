@@ -201,49 +201,28 @@ class OfflineQueueService {
     // This would be implemented based on your specific action types
     switch (action.type) {
       case 'BOOK_SESSION':
-        await this.executeBookSession(action.payload);
+        // await this.executeBookSession(action.payload);
+        console.log('Executing book session:', action.payload);
         break;
       case 'SEND_MESSAGE':
-        await this.executeSendMessage(action.payload);
+        // await this.executeSendMessage(action.payload);
+        console.log('Executing send message:', action.payload);
         break;
       case 'UPDATE_PROFILE':
-        await this.executeUpdateProfile(action.payload);
+        // await this.executeUpdateProfile(action.payload);
+        console.log('Executing update profile:', action.payload);
         break;
       case 'SUBMIT_REVIEW':
-        await this.executeSubmitReview(action.payload);
+        // await this.executeSubmitReview(action.payload);
+        console.log('Executing submit review:', action.payload);
         break;
       case 'FAVORITE_TUTOR':
-        await this.executeFavoriteTutor(action.payload);
+        // await this.executeFavoriteTutor(action.payload);
+        console.log('Executing favorite tutor:', action.payload);
         break;
       default:
         throw new Error(`Unknown action type: ${action.type}`);
     }
-  }
-
-  private async executeBookSession(payload: any): Promise<void> {
-    // Implementation would call your API service
-    console.log('Executing book session:', payload);
-    // await ApiService.bookSession(payload);
-  }
-
-  private async executeSendMessage(payload: any): Promise<void> {
-    console.log('Executing send message:', payload);
-    // await ApiService.sendMessage(payload);
-  }
-
-  private async executeUpdateProfile(payload: any): Promise<void> {
-    console.log('Executing update profile:', payload);
-    // await ApiService.updateProfile(payload);
-  }
-
-  private async executeSubmitReview(payload: any): Promise<void> {
-    console.log('Executing submit review:', payload);
-    // await ApiService.submitReview(payload);
-  }
-
-  private async executeFavoriteTutor(payload: any): Promise<void> {
-    console.log('Executing favorite tutor:', payload);
-    // await ApiService.favoriteTutor(payload);
   }
 
   private async persistQueue(): Promise<void> {

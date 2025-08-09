@@ -57,33 +57,22 @@ export class TokenService {
       const tx = await sklContract.transfer(to, transferAmount);
 
       // Create transaction record
-      type TransactionStatus = 'pending' | 'confirmed';
 
-      const transaction: {
-        id: string;
-        type: 'sent';
-        amount: string;
-        token: string;
-        from: string;
-        to: string;
-        status: TransactionStatus;
-        timestamp: string;
-        txHash: string;
-      } = {
+      const transaction = {
         id: tx.hash,
-        type: 'sent',
+        type: 'sent' as const,
         amount,
         token: 'SKL',
         from: WalletService.getConnectedAddress(),
         to,
-        status: 'pending',
+        status: 'pending' as const,
         timestamp: new Date().toISOString(),
         txHash: tx.hash,
       };
 
       // Wait for confirmation
       await tx.wait();
-      transaction.status = 'confirmed';
+      transaction.status = 'confirmed' as const;
 
       return transaction;
     } catch (error) {
@@ -124,36 +113,21 @@ export class TokenService {
       // Then lock the tokens
       const lockTx = await escrowContract.lockTokens(sessionId, lockAmount);
 
-      type TransactionStatus = 'pending' | 'confirmed';
-
-      interface EscrowTransaction {
-        id: string;
-        type: 'escrow_lock';
-        amount: string;
-        token: string;
-        from: string;
-        to: string;
-        status: TransactionStatus;
-        timestamp: string;
-        txHash: string;
-        sessionId: string;
-      }
-
-      const transaction: EscrowTransaction = {
+      const transaction = {
         id: lockTx.hash,
-        type: 'escrow_lock',
+        type: 'escrow_lock' as const,
         amount,
         token: 'SKL',
         from: WalletService.getConnectedAddress(),
         to: this.ESCROW_CONTRACT_ADDRESS,
-        status: 'pending',
+        status: 'pending' as const,
         timestamp: new Date().toISOString(),
         txHash: lockTx.hash,
         sessionId,
       };
 
       await lockTx.wait();
-      transaction.status = 'confirmed';
+      transaction.status = 'confirmed' as const;
 
       return transaction;
     } catch (error) {
@@ -174,36 +148,21 @@ export class TokenService {
 
       const releaseTx = await escrowContract.releaseTokens(sessionId);
 
-      type TransactionStatus = 'pending' | 'confirmed';
-
-      interface EscrowReleaseTransaction {
-        id: string;
-        type: 'escrow_release';
-        amount: string;
-        token: string;
-        from: string;
-        to: string;
-        status: TransactionStatus;
-        timestamp: string;
-        txHash: string;
-        sessionId: string;
-      }
-
-      const transaction: EscrowReleaseTransaction = {
+      const transaction = {
         id: releaseTx.hash,
-        type: 'escrow_release',
+        type: 'escrow_release' as const,
         amount: '0',
         token: 'SKL',
         from: this.ESCROW_CONTRACT_ADDRESS,
         to: WalletService.getConnectedAddress(),
-        status: 'pending',
+        status: 'pending' as const,
         timestamp: new Date().toISOString(),
         txHash: releaseTx.hash,
         sessionId,
       };
 
       await releaseTx.wait();
-      transaction.status = 'confirmed'; 
+      transaction.status = 'confirmed' as const;
 
       return transaction;
     } catch (error) {

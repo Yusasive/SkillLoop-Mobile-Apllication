@@ -1,16 +1,7 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { ApiService } from '@/services/ApiService';
 import { NotificationService } from '@/services/NotificationService';
-
-interface Notification {
-  id: string;
-  type: 'session' | 'message' | 'bid' | 'payment' | 'certificate';
-  title: string;
-  message: string;
-  data?: any;
-  read: boolean;
-  createdAt: string;
-}
+import { Notification } from '../types';
 
 interface NotificationsState {
   notifications: Notification[];
@@ -32,7 +23,7 @@ export const fetchNotifications = createAsyncThunk(
     try {
       const data = await ApiService.get('/notifications');
       return data;
-    } catch (error) {
+    } catch (error: any) {
       return rejectWithValue(error.message);
     }
   }
@@ -44,7 +35,7 @@ export const markAsRead = createAsyncThunk(
     try {
       await ApiService.patch(`/notifications/${notificationId}/read`);
       return notificationId;
-    } catch (error) {
+    } catch (error: any) {
       return rejectWithValue(error.message);
     }
   }
@@ -56,7 +47,7 @@ export const markAllAsRead = createAsyncThunk(
     try {
       await ApiService.patch('/notifications/read-all');
       return;
-    } catch (error) {
+    } catch (error: any) {
       return rejectWithValue(error.message);
     }
   }
@@ -69,7 +60,7 @@ export const setupPushNotifications = createAsyncThunk(
       const token = await NotificationService.setupPushNotifications();
       await ApiService.post('/notifications/register-device', { token });
       return token;
-    } catch (error) {
+    } catch (error: any) {
       return rejectWithValue(error.message);
     }
   }
