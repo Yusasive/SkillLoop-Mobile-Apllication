@@ -1,7 +1,22 @@
 import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, useColorScheme, FlatList, ActivityIndicator } from 'react-native';
-import { Star, Clock, CheckCircle } from 'lucide-react-native';
-import { Tutor } from '@/store/types';
+import { Star, Clock, CircleCheck as CheckCircle } from 'lucide-react-native';
+
+interface Tutor {
+  id: string;
+  name: string;
+  avatar?: string;
+  bio: string;
+  skills: string[];
+  rating: number;
+  reviewCount: number;
+  hourlyRate: string;
+  isOnline: boolean;
+  responseTime: string;
+  completedSessions: number;
+  languages: string[];
+  verified: boolean;
+}
 
 interface TutorGridProps {
   tutors: Tutor[];
