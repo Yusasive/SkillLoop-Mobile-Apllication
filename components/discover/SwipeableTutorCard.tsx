@@ -9,24 +9,29 @@ import {
 } from 'react-native';
 import { PanGestureHandler, State } from 'react-native-gesture-handler';
 import Animated from 'react-native-reanimated';
-import {
-  Star,
-  Clock,
-  CheckCircle,
-  Heart,
-  X,
-  MessageCircle,
-  Calendar,
-} from 'lucide-react-native';
+import { Star, Clock, CircleCheck as CheckCircle, Heart, X, MessageCircle, Calendar } from 'lucide-react-native';
 import { HapticService } from '@/services/HapticService';
-import { Tutor } from '@/store/types';
 
 const { width: screenWidth } = Dimensions.get('window');
 const SWIPE_THRESHOLD = screenWidth * 0.3;
 const CARD_WIDTH = screenWidth - 32;
 
 export interface SwipeableTutorCardProps {
-  tutor: Tutor;
+  tutor: {
+    id: string;
+    name: string;
+    avatar?: string;
+    bio: string;
+    skills: string[];
+    rating: number;
+    reviewCount: number;
+    hourlyRate: string;
+    isOnline: boolean;
+    responseTime: string;
+    completedSessions: number;
+    languages: string[];
+    verified: boolean;
+  };
   onSwipeLeft?: (tutorId: string) => void; // Reject/Pass
   onSwipeRight?: (tutorId: string) => void; // Like/Interested
   onSwipeUp?: (tutorId: string) => void; // Super like

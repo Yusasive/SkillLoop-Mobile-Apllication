@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, useColorScheme } from 'react-native';
-import { Edit, Star, Award, Clock } from 'lucide-react-native';
+import { CreditCard as Edit, Star, Award, Clock } from 'lucide-react-native';
 import { User } from '@/store/types';
 
 interface ProfileHeaderProps {
