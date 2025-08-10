@@ -8,6 +8,9 @@ module.exports = function (api) {
           unstable_transformImportMeta: true,
         },
       ],
+    ],
+    plugins: [
+      require.resolve('expo-router/babel'), 
       'nativewind/babel',
     ],
   };
